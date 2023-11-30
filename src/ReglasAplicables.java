@@ -146,4 +146,29 @@ public class ReglasAplicables {
     }
 
 
+    public static Regla mejorRegla(LinkedList<Regla> lista, int[][] A, int iFin, int jFin) {
+        Regla r = lista.get(0);
+
+        double menorDistancia = distancia(r.fil, r.col, iFin, jFin);
+        
+        int posMenor = 0;
+       
+        for (int k = 1; k < lista.size(); k++){
+            r = lista.get(k);
+            if (distancia(r.fil, r.col, iFin, jFin) < menorDistancia){
+                menorDistancia = distancia(r.fil, r.col, iFin, jFin);
+                posMenor = k;
+            }
+        }
+        return lista.remove(posMenor);
+    }
+
+
+
+    private static double distancia(double x1, double y1, double x2, double y2) {
+        double x = x2 - x1;
+        double y = y2 - y1;
+        double arg = Math.pow(x, 2) + Math.pow(y, 2);
+        return Math.sqrt(arg);
+    }
 }

@@ -15,14 +15,52 @@ public class App {
 
 
         // laberintoA(m, 2, 1, 1);
-        laberintoC(m, 0, 0, a-1, b-1, 1);
+        laberintoC(m, 1, 1, a-1, b-1, 1);
         System.out.println("cantidad de soluciones: " + cant);
 
 
 
     }
 
-    public static void laberintoC(int m[][], int i, int j,int i1, int j1, int paso){
+    //heulistica
+    public static boolean laberintoC(int m[][], int i, int j,int i1, int j1, int paso){
+        if(!posValida(m,i,j)){
+            return false;
+        }
+        
+        m[i][j] = paso;
+
+        if (i == i1 && j == j1){
+            mostrar(m);
+            cant++;
+        }
+
+        //LinkedList<Regla> L1 = reglasAplicables(m,i,j);
+        //LinkedList<Regla> L1 = reglasAplicablesCaballo(m,i,j);
+        //LinkedList<Regla> L1 = ReglasAplicables.reglasAlfil(m,i,j);
+        LinkedList<Regla> L1 = ReglasAplicables.reglasTorre(m,i,j);
+        // LinkedList<Regla> L1 = ReglasAplicables.reglasReyna(m,i,j);
+
+
+
+        Regla r;
+
+        while (!L1.isEmpty()){
+
+            r = ReglasAplicables.mejorRegla(L1, m, i, j);
+
+            if (laberintoC(m, r.fil, r.col, i1, j1, paso + 1)){
+                return true;
+            }
+            // laberintoC(m, r.fil, r.col, i1, j1, paso+1);
+            m[r.fil][r.col] = 0;
+        }
+        return false;
+    }
+
+
+    //
+    public static void laberintoCH(int m[][], int i, int j,int i1, int j1, int paso){
         if(!posValida(m,i,j)){
             return ;
         }
@@ -34,15 +72,12 @@ public class App {
             cant++;
         }
 
-        LinkedList<Regla> L1 = reglasAplicables(m,i,j);
+        //LinkedList<Regla> L1 = reglasAplicables(m,i,j);
         // LinkedList<Regla> L1 = reglasAplicablesCaballo(m,i,j);
         // LinkedList<Regla> L1 = ReglasAplicables.reglasAlfil(m,i,j);
-        // LinkedList<Regla> L1 = ReglasAplicables.reglasTorre(m,i,j);
+        LinkedList<Regla> L1 = ReglasAplicables.reglasTorre(m,i,j);
         // LinkedList<Regla> L1 = ReglasAplicables.reglasReyna(m,i,j);
 
-
-
-        int r8 = 0;
 
         while (!L1.isEmpty()){
             Regla r = L1.removeFirst();
@@ -52,7 +87,6 @@ public class App {
         }
 
     }
-
     private static LinkedList<Regla> reglasAplicablesCaballo(int[][] m, int fi, int co) {
 
         LinkedList<Regla> l1 = new LinkedList<>();
